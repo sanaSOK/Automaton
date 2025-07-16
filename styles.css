@@ -1,0 +1,240 @@
+/* Global styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 100%;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* Main Panel */
+.panel {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start; /* Ensure items align at top for sticky positioning */
+}
+
+/* Controls */
+.controls {
+    width: 40%;
+    padding-right: 20px;
+    /* Allow controls to scroll independently */
+    max-height: 100%;
+}
+
+.control-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.control-group h3 {
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3498db;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+/* Extended controls for new requirements */
+.extended-controls {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.extended-controls h3 {
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+.button-row button {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* State and transition lists */
+.states-list, .transitions-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.state-item, .transition-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.state-item:last-child, .transition-item:last-child {
+    border-bottom: none;
+}
+
+.remove-btn {
+    background-color: #e74c3c;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.remove-btn:hover {
+    background-color: #c0392b;
+}
+
+.state-controls, .transition-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.transition-controls select, .transition-controls input {
+    margin-bottom: 0;
+}
+
+/* Visualization */
+.visualization {
+    width: 60%;
+    height: 90vh; /* Use viewport height for better responsiveness */
+    max-height: 700px;
+    position: sticky;
+    top: 20px; /* Distance from top when fixed */
+}
+
+#automataNetwork {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Improve appearance when sticky */
+    transition: all 0.3s ease;
+}
+
+.simulation-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#inputString {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+#simulationStatus {
+    margin-bottom: 15px;
+}
+
+#simulationStatus p {
+    margin-bottom: 8px;
+}
+
+#simulationStatus span {
+    font-weight: 600;
+}
+
+/* File operations */
+.file-ops {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Checkbox list */
+.checkbox-list {
+    margin-top: 10px;
+}
+
+.checkbox-item {
+    margin-bottom: 5px;
+}
+
+/* Automaton type display */
+#automatonTypeDisplay {
+    font-weight: 600;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    color: #34495e;
+    margin-bottom: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .panel.active {
+        flex-direction: column;
+    }
+    
+    .controls, .visualization {
+        width: 100%;
+    }
+    
+    .controls {
+        margin-bottom: 20px;
+        padding-right: 0;
+    }
+}

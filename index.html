@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automata Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Include vis.js for visualization -->
+    <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Automata Simulator</h1>
+        
+        <div id="mainPanel" class="panel active">
+            <div class="controls">
+                <div class="control-group">
+                    <h3>Automaton Type</h3>
+                    <p id="automatonTypeDisplay">Type: Undetermined (create an automaton first)</p>
+                </div>
+                
+                <div class="control-group">
+                    <h3>Alphabet (comma separated)</h3>
+                    <input type="text" id="alphabet" placeholder="e.g., a,b,c">
+                </div>
+
+                <div class="control-group">
+                    <h3>States</h3>
+                    <div class="state-controls">
+                        <input type="text" id="newState" placeholder="State name">
+                        <button id="addState">Add State</button>
+                    </div>
+                    <div id="statesList" class="states-list">
+                        <!-- States will be listed here -->
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Initial State</h3>
+                    <select id="initialState"></select>
+                </div>
+
+                <div class="control-group">
+                    <h3>Final States</h3>
+                    <div id="finalStates" class="checkbox-list">
+                        <!-- Final states checkboxes will be added here -->
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <h3>Transitions</h3>
+                    <div class="transition-controls">
+                        <select id="fromState"></select>
+                        <input type="text" id="transitionSymbol" placeholder="Symbol">
+                        <select id="toState"></select>
+                        <button id="addTransition">Add</button>
+                    </div>
+                    <div id="transitionsList" class="transitions-list">
+                        <!-- Transitions will be listed here -->
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button id="normalize">Normalize</button>
+                    <button id="clear">Clear Automaton</button>
+                </div>
+
+                <div class="file-ops">
+                    <button id="saveFile">Save to File</button>
+                    <button id="loadFile">Load from File</button>
+                    <input type="file" id="fileInput" style="display: none">
+                </div>
+                
+                <div class="control-group">
+                    <h3>Simulation</h3>
+                    <div class="simulation-controls">
+                        <input type="text" id="inputString" placeholder="Input string">
+                        <button id="stepBtn">Step</button>
+                        <button id="resetBtn">Reset</button>
+                    </div>
+                    <div id="simulationStatus">
+                        <p>Current state: <span id="currentState">-</span></p>
+                        <p>Remaining input: <span id="remainingInput">-</span></p>
+                        <p>Result: <span id="simulationResult">-</span></p>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <h3>Advanced Operations</h3>
+                    <div class="button-row">
+                        <button id="checkDeterministic">Check if Deterministic</button>
+                        <button id="testString">Test String</button>
+                    </div>
+                    <div class="button-row">
+                        <button id="convertToDFA">Convert NFA to DFA</button>
+                        <button id="minimizeDFA">Minimize DFA</button>
+                    </div>
+                    <div id="operationResult" class="operation-result"></div>
+                </div>
+            </div>
+
+            <div class="visualization">
+                <div id="automataNetwork"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden download link for file saving -->
+    <a id="downloadLink" style="display: none;"></a>
+    
+    <!-- JavaScript files -->
+    <script src="automaton.js"></script>
+    <script src="visualization.js"></script>
+    <script src="simulator.js"></script>
+    <script src="ui.js"></script>
+</body>
+</html>
