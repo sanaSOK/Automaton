@@ -7,6 +7,249 @@
     <link rel="stylesheet" href="styles.css">
     <!-- Include vis.js for visualization -->
     <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+    <style>
+        /* Global styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    height: 100%;
+    min-height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+/* Main Panel */
+.panel {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start; /* Ensure items align at top for sticky positioning */
+}
+
+/* Controls */
+.controls {
+    width: 40%;
+    padding-right: 20px;
+    /* Allow controls to scroll independently */
+    max-height: 100%;
+}
+
+.control-group {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.control-group h3 {
+    margin-bottom: 10px;
+    color: #34495e;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #3498db;
+}
+
+.button-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+/* Extended controls for new requirements */
+.extended-controls {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.extended-controls h3 {
+    margin-bottom: 15px;
+    color: #34495e;
+}
+
+.button-row button {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+}
+
+/* State and transition lists */
+.states-list, .transitions-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+.state-item, .transition-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.state-item:last-child, .transition-item:last-child {
+    border-bottom: none;
+}
+
+.remove-btn {
+    background-color: #e74c3c;
+    padding: 2px 6px;
+    font-size: 12px;
+}
+
+.remove-btn:hover {
+    background-color: #c0392b;
+}
+
+.state-controls, .transition-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.transition-controls select, .transition-controls input {
+    margin-bottom: 0;
+}
+
+/* Visualization */
+.visualization {
+    width: 60%;
+    height: 90vh; /* Use viewport height for better responsiveness */
+    max-height: 700px;
+    position: sticky;
+    top: 20px; /* Distance from top when fixed */
+}
+
+#automataNetwork {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Improve appearance when sticky */
+    transition: all 0.3s ease;
+}
+
+.simulation-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#inputString {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+#simulationStatus {
+    margin-bottom: 15px;
+}
+
+#simulationStatus p {
+    margin-bottom: 8px;
+}
+
+#simulationStatus span {
+    font-weight: 600;
+}
+
+/* File operations */
+.file-ops {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Checkbox list */
+.checkbox-list {
+    margin-top: 10px;
+}
+
+.checkbox-item {
+    margin-bottom: 5px;
+}
+
+/* Automaton type display */
+#automatonTypeDisplay {
+    font-weight: 600;
+    padding: 8px 12px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    color: #34495e;
+    margin-bottom: 10px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .panel.active {
+        flex-direction: column;
+    }
+    
+    .controls, .visualization {
+        width: 100%;
+    }
+    
+    .controls {
+        margin-bottom: 20px;
+        padding-right: 0;
+    }
+}
+
+    </style>
 </head>
 <body>
     <div class="container">
@@ -109,9 +352,2006 @@
     <a id="downloadLink" style="display: none;"></a>
     
     <!-- JavaScript files -->
-    <script src="automaton.js"></script>
-    <script src="visualization.js"></script>
-    <script src="simulator.js"></script>
-    <script src="ui.js"></script>
+    <script src="automaton.js">
+        /**
+ * Automaton class representing both DFA and NFA
+ */
+class Automaton {
+    constructor(type = 'DFA') {
+        this.type = type; // 'DFA' or 'NFA'
+        this.states = new Set();
+        this.alphabet = new Set();
+        this.transitions = {};
+        this.initialState = null;
+        this.finalStates = new Set();
+    }
+
+    /**
+     * Add a state to the automaton
+     * @param {string} state - State name
+     */
+    addState(state) {
+        this.states.add(state);
+    }
+
+    /**
+     * Remove a state from the automaton
+     * @param {string} state - State name
+     */
+    removeState(state) {
+        this.states.delete(state);
+        
+        // Remove as initial state if needed
+        if (this.initialState === state) {
+            this.initialState = null;
+        }
+        
+        // Remove from final states if needed
+        this.finalStates.delete(state);
+        
+        // Remove transitions involving this state
+        for (const fromState in this.transitions) {
+            if (fromState === state) {
+                delete this.transitions[fromState];
+            } else {
+                for (const symbol in this.transitions[fromState]) {
+                    if (this.type === 'DFA') {
+                        if (this.transitions[fromState][symbol] === state) {
+                            delete this.transitions[fromState][symbol];
+                        }
+                    } else {
+                        // For NFA, remove state from the set of target states
+                        if (this.transitions[fromState][symbol]) {
+                            this.transitions[fromState][symbol].delete(state);
+                            // If the set is empty, remove the entire symbol entry
+                            if (this.transitions[fromState][symbol].size === 0) {
+                                delete this.transitions[fromState][symbol];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Set the alphabet for the automaton
+     * @param {Array|Set} alphabet - Set of symbols
+     */
+    setAlphabet(alphabet) {
+        this.alphabet = new Set(alphabet);
+    }
+
+    /**
+     * Set initial state
+     * @param {string} state - State name
+     */
+    setInitialState(state) {
+        if (this.states.has(state)) {
+            this.initialState = state;
+        }
+    }
+
+    /**
+     * Toggle a state as final
+     * @param {string} state - State name
+     * @param {boolean} isFinal - Whether the state is final
+     */
+    toggleFinalState(state, isFinal) {
+        if (this.states.has(state)) {
+            if (isFinal) {
+                this.finalStates.add(state);
+            } else {
+                this.finalStates.delete(state);
+            }
+        }
+    }
+
+    /**
+     * Add a transition to the automaton
+     * @param {string} fromState - Source state
+     * @param {string} symbol - Transition symbol
+     * @param {string} toState - Target state
+     */
+    addTransition(fromState, symbol, toState) {
+        if (!this.states.has(fromState) || !this.states.has(toState)) {
+            return false;
+        }
+        
+        // Add the symbol to alphabet
+        if (symbol !== 'ε') {
+            this.alphabet.add(symbol);
+        }
+        
+        if (!this.transitions[fromState]) {
+            this.transitions[fromState] = {};
+        }
+        
+        if (this.type === 'DFA') {
+            // For DFA, each state-symbol pair has exactly one target state
+            this.transitions[fromState][symbol] = toState;
+        } else {
+            // For NFA, each state-symbol pair has a set of target states
+            if (!this.transitions[fromState][symbol]) {
+                this.transitions[fromState][symbol] = new Set();
+            }
+            this.transitions[fromState][symbol].add(toState);
+        }
+        
+        return true;
+    }
+
+    /**
+     * Remove a transition
+     * @param {string} fromState 
+     * @param {string} symbol 
+     * @param {string} toState 
+     */
+    removeTransition(fromState, symbol, toState) {
+        if (!this.transitions[fromState] || !this.transitions[fromState][symbol]) {
+            return false;
+        }
+        
+        if (this.type === 'DFA') {
+            delete this.transitions[fromState][symbol];
+        } else {
+            this.transitions[fromState][symbol].delete(toState);
+            if (this.transitions[fromState][symbol].size === 0) {
+                delete this.transitions[fromState][symbol];
+            }
+        }
+
+        // Check if the symbol is still used in any transition
+        let symbolInUse = false;
+        for (const state in this.transitions) {
+            if (this.transitions[state][symbol]) {
+                symbolInUse = true;
+                break;
+            }
+        }
+        
+        // If the symbol is no longer used, remove it from the alphabet
+        if (!symbolInUse && symbol !== 'ε') {
+            this.alphabet.delete(symbol);
+        }
+        
+        return true;
+    }
+
+    /**
+     * Convert NFA to DFA using subset construction
+     * @returns {Automaton} New DFA
+     */
+    convertToDFA() {
+        if (this.type === 'DFA') {
+            return this.clone();
+        }
+
+        const dfa = new Automaton('DFA');
+        
+        // Get epsilon closure for all states
+        const epsilonClosures = {};
+        for (const state of this.states) {
+            epsilonClosures[state] = this._epsilonClosure([state]);
+        }
+        
+        // Start with the epsilon closure of the initial state
+        const initialClosure = this._epsilonClosure([this.initialState]);
+        const initialStateName = this._getSetName(initialClosure);
+        
+        dfa.addState(initialStateName);
+        dfa.setInitialState(initialStateName);
+        
+        // Check if the initial closure contains any final states
+        for (const state of initialClosure) {
+            if (this.finalStates.has(state)) {
+                dfa.toggleFinalState(initialStateName, true);
+                break;
+            }
+        }
+
+        // Set of state sets to process
+        const unprocessed = [initialClosure];
+        const processed = [];
+        
+        // Process all state sets
+        while (unprocessed.length > 0) {
+            const currentStateSet = unprocessed.shift();
+            const currentStateName = this._getSetName(currentStateSet);
+            
+            processed.push(currentStateSet);
+            
+            // For each symbol in the alphabet
+            for (const symbol of this.alphabet) {
+                // Skip epsilon transitions
+                if (symbol === 'ε') continue;
+                
+                // Find all states reachable from current state set on this symbol
+                const nextStateSet = this._getNextStates(currentStateSet, symbol);
+                const nextStateName = this._getSetName(nextStateSet);
+                
+                // If this is a new state set, add it to the DFA and queue
+                if (nextStateSet.length > 0) {
+                    if (!dfa.states.has(nextStateName)) {
+                        dfa.addState(nextStateName);
+                        
+                        // Check if the new state contains any final states
+                        for (const state of nextStateSet) {
+                            if (this.finalStates.has(state)) {
+                                dfa.toggleFinalState(nextStateName, true);
+                                break;
+                            }
+                        }
+                        
+                        // Add to unprocessed queue if we haven't processed it yet
+                        const alreadyProcessed = processed.some(set => 
+                            this._getSetName(set) === nextStateName);
+                            
+                        const alreadyQueued = unprocessed.some(set => 
+                            this._getSetName(set) === nextStateName);
+                        
+                        if (!alreadyProcessed && !alreadyQueued) {
+                            unprocessed.push(nextStateSet);
+                        }
+                    }
+                    
+                    // Add the transition
+                    dfa.addTransition(currentStateName, symbol, nextStateName);
+                }
+            }
+        }
+        
+        // Set the alphabet
+        dfa.setAlphabet([...this.alphabet].filter(symbol => symbol !== 'ε'));
+        
+        return dfa;
+    }
+
+    /**
+     * Find all states reachable from a state set on a given symbol, including epsilon transitions
+     * @param {Array} stateSet - Set of states
+     * @param {string} symbol - Transition symbol
+     * @returns {Array} - Set of reachable states
+     */
+    _getNextStates(stateSet, symbol) {
+        let nextStates = [];
+        
+        // For each state in the set
+        for (const state of stateSet) {
+            if (this.transitions[state] && this.transitions[state][symbol]) {
+                // For NFA, transitions[state][symbol] is a Set
+                nextStates = nextStates.concat([...this.transitions[state][symbol]]);
+            }
+        }
+        
+        // Get epsilon closure of the resulting set
+        return this._epsilonClosure(nextStates);
+    }
+
+    /**
+     * Find the epsilon closure of a set of states
+     * @param {Array} stateSet - Set of states
+     * @returns {Array} - Epsilon closure
+     */
+    _epsilonClosure(stateSet) {
+        const closure = [...stateSet];
+        const stack = [...stateSet];
+        
+        while (stack.length > 0) {
+            const state = stack.pop();
+            
+            // Get all epsilon transitions from this state
+            if (this.transitions[state] && this.transitions[state]['ε']) {
+                for (const nextState of this.transitions[state]['ε']) {
+                    // Add to closure if not already included
+                    if (!closure.includes(nextState)) {
+                        closure.push(nextState);
+                        stack.push(nextState);
+                    }
+                }
+            }
+        }
+        
+        return closure.sort();
+    }
+
+    /**
+     * Convert a set of states to a string name
+     * @param {Array} stateSet - Set of states
+     * @returns {string} - Name for the state set
+     */
+    _getSetName(stateSet) {
+        if (stateSet.length === 0) return 'Ø';
+        return `{${stateSet.join(',')}}`;
+    }
+
+    /**
+     * Simulate automaton on an input string
+     * @param {string} input - Input string
+     * @returns {object} Simulation result
+     */
+    simulate(input) {
+        // For DFA, we can simply follow the transitions
+        if (this.type === 'DFA') {
+            return this._simulateDFA(input);
+        } else {
+            // For NFA, we can either convert to DFA first or simulate directly
+            return this._simulateNFA(input);
+        }
+    }
+
+    /**
+     * Simulate DFA on an input string
+     * @param {string} input - Input string
+     * @returns {object} Simulation result
+     */
+    _simulateDFA(input) {
+        if (!this.initialState) {
+            return { accepted: false, path: [] };
+        }
+        
+        let currentState = this.initialState;
+        const path = [{ state: currentState, input: input }];
+        
+        for (let i = 0; i < input.length; i++) {
+            const symbol = input[i];
+            
+            // Check if symbol is in alphabet
+            if (!this.alphabet.has(symbol)) {
+                return { 
+                    accepted: false, 
+                    path, 
+                    error: `Symbol ${symbol} is not in the alphabet`
+                };
+            }
+            
+            // Check if there is a transition for this symbol
+            if (!this.transitions[currentState] || !this.transitions[currentState][symbol]) {
+                return { 
+                    accepted: false, 
+                    path,
+                    error: `No transition from state ${currentState} on symbol ${symbol}`
+                };
+            }
+            
+            // Follow the transition
+            currentState = this.transitions[currentState][symbol];
+            path.push({ state: currentState, input: input.substring(i+1) });
+        }
+        
+        // Check if the final state is accepting
+        return {
+            accepted: this.finalStates.has(currentState),
+            path
+        };
+    }
+
+    /**
+     * Simulate NFA on an input string
+     * @param {string} input - Input string
+     * @returns {object} Simulation result
+     */
+    _simulateNFA(input) {
+        if (!this.initialState) {
+            return { accepted: false, path: [] };
+        }
+
+        // Start with epsilon closure of the initial state
+        let currentStates = this._epsilonClosure([this.initialState]);
+        const path = [{ states: [...currentStates], input: input }];
+        
+        for (let i = 0; i < input.length; i++) {
+            const symbol = input[i];
+            
+            // Check if symbol is in alphabet
+            if (!this.alphabet.has(symbol)) {
+                return { 
+                    accepted: false, 
+                    path, 
+                    error: `Symbol ${symbol} is not in the alphabet`
+                };
+            }
+
+            // Find all next states
+            let nextStates = [];
+            for (const state of currentStates) {
+                if (this.transitions[state] && this.transitions[state][symbol]) {
+                    nextStates = nextStates.concat([...this.transitions[state][symbol]]);
+                }
+            }
+            
+            // Get epsilon closure of next states
+            currentStates = this._epsilonClosure(nextStates);
+            
+            // If there are no next states, the input is rejected
+            if (currentStates.length === 0) {
+                return { 
+                    accepted: false, 
+                    path,
+                    error: `No transitions from current states on symbol ${symbol}`
+                };
+            }
+            
+            path.push({ states: [...currentStates], input: input.substring(i+1) });
+        }
+
+        // Check if any of the final states is accepting
+        const isAccepted = currentStates.some(state => this.finalStates.has(state));
+        return {
+            accepted: isAccepted,
+            path
+        };
+    }
+
+    /**
+     * Step through the simulation of the automaton
+     * @param {string} input - The full input string
+     * @param {number} step - The current step (how many characters have been processed)
+     * @returns {object} Current simulation state
+     */
+    simulateStep(input, step) {
+        // If we're at the beginning, reset to the initial state
+        if (step === 0) {
+            if (this.type === 'DFA') {
+                return {
+                    state: this.initialState,
+                    states: null,
+                    remainingInput: input,
+                    accepted: this.finalStates.has(this.initialState),
+                    complete: input.length === 0,
+                };
+            } else {
+                // For NFA, start with epsilon closure of the initial state
+                const initialStates = this._epsilonClosure([this.initialState]);
+                const isAccepted = initialStates.some(state => this.finalStates.has(state));
+                return {
+                    state: null,
+                    states: initialStates,
+                    remainingInput: input,
+                    accepted: isAccepted,
+                    complete: input.length === 0,
+                };
+            }
+        }
+
+        // Determine how much of the input we've processed
+        const processedInput = input.substring(0, step);
+        const remainingInput = input.substring(step);
+
+        if (this.type === 'DFA') {
+            // Simulate DFA up to the current step
+            let currentState = this.initialState;
+            
+            for (let i = 0; i < processedInput.length; i++) {
+                const symbol = processedInput[i];
+                if (!this.transitions[currentState] || !this.transitions[currentState][symbol]) {
+                    return {
+                        state: currentState,
+                        states: null,
+                        remainingInput,
+                        accepted: false,
+                        complete: true,
+                        error: `No transition from state ${currentState} on symbol ${symbol}`,
+                    };
+                }
+                currentState = this.transitions[currentState][symbol];
+            }
+
+            return {
+                state: currentState,
+                states: null,
+                remainingInput,
+                accepted: this.finalStates.has(currentState),
+                complete: remainingInput.length === 0,
+            };
+        } else {
+            // Simulate NFA up to the current step
+            let currentStates = this._epsilonClosure([this.initialState]);
+            
+            for (let i = 0; i < processedInput.length; i++) {
+                const symbol = processedInput[i];
+                
+                // Find all next states
+                let nextStates = [];
+                for (const state of currentStates) {
+                    if (this.transitions[state] && this.transitions[state][symbol]) {
+                        nextStates = nextStates.concat([...this.transitions[state][symbol]]);
+                    }
+                }
+                
+                // Get epsilon closure of next states
+                currentStates = this._epsilonClosure(nextStates);
+                
+                if (currentStates.length === 0) {
+                    return {
+                        state: null,
+                        states: [],
+                        remainingInput,
+                        accepted: false,
+                        complete: true,
+                        error: `No transitions from current states on symbol ${processedInput[i]}`,
+                    };
+                }
+            }
+
+            const isAccepted = currentStates.some(state => this.finalStates.has(state));
+            return {
+                state: null,
+                states: currentStates,
+                remainingInput,
+                accepted: isAccepted,
+                complete: remainingInput.length === 0,
+            };
+        }
+    }
+
+    /**
+     * Check if the automaton is valid
+     * @returns {object} Validation result
+     */
+    validate() {
+        const errors = [];
+        
+        // Check if initial state is set
+        if (!this.initialState) {
+            errors.push('Initial state is not set');
+        }
+        
+        // Check if there is at least one final state
+        if (this.finalStates.size === 0) {
+            errors.push('No final states defined');
+        }
+        
+        // For DFA, check that all states have transitions for all symbols
+        if (this.type === 'DFA') {
+            for (const state of this.states) {
+                for (const symbol of this.alphabet) {
+                    if (!this.transitions[state] || !this.transitions[state][symbol]) {
+                        errors.push(`State ${state} has no transition for symbol ${symbol}`);
+                    }
+                }
+            }
+        }
+        
+        return { valid: errors.length === 0, errors };
+    }
+
+    /**
+     * Minimize DFA using Hopcroft's algorithm
+     * @returns {Automaton} Minimized DFA
+     */
+    minimize() {
+        if (this.type !== 'DFA') {
+            // Convert NFA to DFA first
+            return this.convertToDFA().minimize();
+        }
+        
+        // Step 1: Remove unreachable states
+        const reachable = this._getReachableStates();
+        const unreachable = [...this.states].filter(state => !reachable.has(state));
+        
+        // Step 2: Create initial partition with final and non-final states
+        const finalStatesSet = new Set([...this.finalStates]);
+        const nonFinalStatesSet = new Set([...reachable].filter(state => !this.finalStates.has(state)));
+        
+        let partitions = [];
+        if (finalStatesSet.size > 0) partitions.push(finalStatesSet);
+        if (nonFinalStatesSet.size > 0) partitions.push(nonFinalStatesSet);
+        
+        // Step 3: Refine partitions
+        let changed = true;
+        while (changed) {
+            changed = false;
+            
+            const newPartitions = [];
+            
+            // For each current partition
+            for (const partition of partitions) {
+                // Try to split the partition based on transitions
+                const splits = this._splitPartition(partition, partitions);
+                
+                // If the partition was split
+                if (splits.length > 1) {
+                    changed = true;
+                    newPartitions.push(...splits);
+                } else {
+                    newPartitions.push(partition);
+                }
+            }
+            
+            partitions = newPartitions;
+        }
+        
+        // Step 4: Create the minimized DFA
+        const minimized = new Automaton('DFA');
+        
+        // Create states in the minimized DFA for each partition
+        const stateMap = {};  // Maps original states to partition states
+        
+        for (let i = 0; i < partitions.length; i++) {
+            const partition = partitions[i];
+            const partitionState = `q${i}`;
+            
+            minimized.addState(partitionState);
+            
+            // Map all states in this partition to the new partition state
+            for (const state of partition) {
+                stateMap[state] = partitionState;
+            }
+            
+            // If partition contains the initial state, make it the initial state
+            if (partition.has(this.initialState)) {
+                minimized.setInitialState(partitionState);
+            }
+            
+            // If partition contains any final state, make it a final state
+            for (const state of partition) {
+                if (this.finalStates.has(state)) {
+                    minimized.toggleFinalState(partitionState, true);
+                    break;
+                }
+            }
+        }
+        
+        // Add transitions to the minimized DFA
+        for (const partition of partitions) {
+            // Take the first state in the partition as representative
+            const representativeState = [...partition][0];
+            const partitionState = stateMap[representativeState];
+            
+            // Add transitions from the representative state to other states
+            if (this.transitions[representativeState]) {
+                for (const symbol of this.alphabet) {
+                    const targetState = this.transitions[representativeState][symbol];
+                    if (targetState) {
+                        const targetPartitionState = stateMap[targetState];
+                        minimized.addTransition(partitionState, symbol, targetPartitionState);
+                    }
+                }
+            }
+        }
+        
+        // Set the alphabet
+        minimized.setAlphabet(this.alphabet);
+        
+        return minimized;
+    }
+
+    /**
+     * Get all states reachable from the initial state
+     * @returns {Set} Set of reachable states
+     */
+    _getReachableStates() {
+        const reachable = new Set([this.initialState]);
+        const queue = [this.initialState];
+        
+        while (queue.length > 0) {
+            const state = queue.shift();
+            
+            if (this.transitions[state]) {
+                for (const symbol in this.transitions[state]) {
+                    const targetState = this.transitions[state][symbol];
+                    
+                    if (!reachable.has(targetState)) {
+                        reachable.add(targetState);
+                        queue.push(targetState);
+                    }
+                }
+            }
+        }
+        
+        return reachable;
+    }
+
+    /**
+     * Split a partition based on transitions
+     * @param {Set} partition - The partition to split
+     * @param {Array} partitions - All current partitions
+     * @returns {Array} Array of new partitions
+     */
+    _splitPartition(partition, partitions) {
+        // If the partition has only one state, it can't be split further
+        if (partition.size <= 1) {
+            return [partition];
+        }
+        
+        // For each symbol in the alphabet
+        for (const symbol of this.alphabet) {
+            // Group states by their transition targets
+            const groups = new Map();
+            
+            for (const state of partition) {
+                let targetPartitionIndex = -1;
+                
+                // Find which partition the target state belongs to
+                if (this.transitions[state] && this.transitions[state][symbol]) {
+                    const targetState = this.transitions[state][symbol];
+                    
+                    for (let i = 0; i < partitions.length; i++) {
+                        if (partitions[i].has(targetState)) {
+                            targetPartitionIndex = i;
+                            break;
+                        }
+                    }
+                }
+                
+                // Group states by their target partition index
+                if (!groups.has(targetPartitionIndex)) {
+                    groups.set(targetPartitionIndex, new Set());
+                }
+                groups.get(targetPartitionIndex).add(state);
+            }
+            
+            // If we found more than one group, the partition can be split
+            if (groups.size > 1) {
+                return Array.from(groups.values());
+            }
+        }
+        
+        // If we get here, the partition couldn't be split
+        return [partition];
+    }
+
+    /**
+     * Create a deep clone of the automaton
+     * @returns {Automaton} Cloned automaton
+     */
+    clone() {
+        const clone = new Automaton(this.type);
+        
+        // Copy states
+        for (const state of this.states) {
+            clone.addState(state);
+        }
+        
+        // Copy alphabet
+        clone.setAlphabet(this.alphabet);
+        
+        // Copy initial state
+        clone.initialState = this.initialState;
+        
+        // Copy final states
+        for (const state of this.finalStates) {
+            clone.toggleFinalState(state, true);
+        }
+        
+        // Copy transitions
+        for (const fromState in this.transitions) {
+            for (const symbol in this.transitions[fromState]) {
+                if (this.type === 'DFA') {
+                    const toState = this.transitions[fromState][symbol];
+                    clone.addTransition(fromState, symbol, toState);
+                } else {
+                    for (const toState of this.transitions[fromState][symbol]) {
+                        clone.addTransition(fromState, symbol, toState);
+                    }
+                }
+            }
+        }
+        
+        return clone;
+    }
+
+    /**
+     * Normalize the automaton by renaming states sequentially
+     * @returns {Automaton} Normalized automaton
+     */
+    normalize() {
+        const normalized = new Automaton(this.type);
+        
+        // Map from old state names to new state names
+        const stateMap = {};
+        let stateIndex = 0;
+        
+        // Ensure initial state is q0
+        stateMap[this.initialState] = `q${stateIndex++}`;
+        
+        // Map all final states next
+        for (const state of this.finalStates) {
+            if (state !== this.initialState && !stateMap[state]) {
+                stateMap[state] = `q${stateIndex++}`;
+            }
+        }
+        
+        // Map all remaining states
+        for (const state of this.states) {
+            if (!stateMap[state]) {
+                stateMap[state] = `q${stateIndex++}`;
+            }
+        }
+        
+        // Add all states to the normalized automaton
+        for (const oldState in stateMap) {
+            const newState = stateMap[oldState];
+            normalized.addState(newState);
+            
+            if (oldState === this.initialState) {
+                normalized.setInitialState(newState);
+            }
+            
+            if (this.finalStates.has(oldState)) {
+                normalized.toggleFinalState(newState, true);
+            }
+        }
+        
+        // Add all transitions
+        for (const fromState in this.transitions) {
+            for (const symbol in this.transitions[fromState]) {
+                if (this.type === 'DFA') {
+                    const toState = this.transitions[fromState][symbol];
+                    normalized.addTransition(stateMap[fromState], symbol, stateMap[toState]);
+                } else {
+                    for (const toState of this.transitions[fromState][symbol]) {
+                        normalized.addTransition(stateMap[fromState], symbol, stateMap[toState]);
+                    }
+                }
+            }
+        }
+        
+        // Set the alphabet
+        normalized.setAlphabet(this.alphabet);
+        
+        return normalized;
+    }
+
+    /**
+     * Export automaton to JSON
+     * @returns {Object} JSON representation
+     */
+    toJSON() {
+        const json = {
+            type: this.type,
+            states: Array.from(this.states),
+            alphabet: Array.from(this.alphabet),
+            initialState: this.initialState,
+            finalStates: Array.from(this.finalStates),
+            transitions: {}
+        };
+        
+        // Convert transitions to a serializable format
+        for (const fromState in this.transitions) {
+            json.transitions[fromState] = {};
+            
+            for (const symbol in this.transitions[fromState]) {
+                if (this.type === 'DFA') {
+                    json.transitions[fromState][symbol] = this.transitions[fromState][symbol];
+                } else {
+                    json.transitions[fromState][symbol] = Array.from(this.transitions[fromState][symbol]);
+                }
+            }
+        }
+        
+        return json;
+    }
+
+    /**
+     * Import automaton from JSON
+     * @param {Object} json - JSON representation
+     * @returns {Automaton} Imported automaton
+     */
+    static fromJSON(json) {
+        const automaton = new Automaton(json.type);
+        
+        // Add states
+        for (const state of json.states) {
+            automaton.addState(state);
+        }
+        
+        // Set alphabet
+        automaton.setAlphabet(json.alphabet);
+        
+        // Set initial state
+        automaton.initialState = json.initialState;
+        
+        // Set final states
+        for (const state of json.finalStates) {
+            automaton.toggleFinalState(state, true);
+        }
+        
+        // Add transitions
+        for (const fromState in json.transitions) {
+            for (const symbol in json.transitions[fromState]) {
+                if (json.type === 'DFA') {
+                    const toState = json.transitions[fromState][symbol];
+                    automaton.addTransition(fromState, symbol, toState);
+                } else {
+                    for (const toState of json.transitions[fromState][symbol]) {
+                        automaton.addTransition(fromState, symbol, toState);
+                    }
+                }
+            }
+        }
+        
+        return automaton;
+    }
+}
+
+// Export for use in other modules
+if (typeof module !== 'undefined') {
+    module.exports = Automaton;
+}
+
+    </script>
+    <script src="visualization.js">
+        /**
+ * Visualization module for automata using vis.js
+ */
+class AutomatonVisualizer {
+    constructor(containerId) {
+        this.container = document.getElementById(containerId);
+        this.network = null;
+        this.nodes = new vis.DataSet();
+        this.edges = new vis.DataSet();
+        this.automaton = null;
+        this.options = {
+            nodes: {
+                shape: 'circle',
+                size: 30,
+                font: {
+                    size: 16,
+                    color: '#333333'
+                },
+                borderWidth: 2,
+                shadow: true
+            },
+            edges: {
+                arrows: {
+                    to: { enabled: true, scaleFactor: 1 }
+                },
+                font: {
+                    size: 14,
+                    align: 'middle'
+                },
+                shadow: true
+            },
+            physics: {
+                enabled: true,
+                solver: 'forceAtlas2Based',
+                forceAtlas2Based: {
+                    gravitationalConstant: -50,
+                    centralGravity: 0.01,
+                    springLength: 150,
+                    springConstant: 0.05
+                },
+                stabilization: {
+                    iterations: 200
+                }
+            },
+            interaction: {
+                navigationButtons: true,
+                keyboard: true
+            }
+        };
+        
+        this._initNetwork();
+    }
+
+    /**
+     * Initialize the network visualization
+     */
+    _initNetwork() {
+        const data = {
+            nodes: this.nodes,
+            edges: this.edges
+        };
+        
+        this.network = new vis.Network(this.container, data, this.options);
+    }
+
+    /**
+     * Update the visualization with a new automaton
+     * @param {Automaton} automaton - The automaton to visualize
+     */
+    update(automaton) {
+        this.automaton = automaton;
+        
+        // Clear existing nodes and edges
+        this.nodes.clear();
+        this.edges.clear();
+        
+        // Add nodes for each state
+        const nodes = [];
+        for (const state of this.automaton.states) {
+            const isFinal = this.automaton.finalStates.has(state);
+            const isInitial = this.automaton.initialState === state;
+            
+            nodes.push({
+                id: state,
+                label: state,
+                color: {
+                    background: isFinal ? '#ffdddd' : '#d5e8ff',
+                    border: isFinal ? '#ff0000' : '#2B7CE9'
+                },
+                borderWidth: isFinal ? 3 : 2,
+                shapeProperties: isFinal ? { borderDashes: false } : {}
+            });
+        }
+        
+        this.nodes.add(nodes);
+        
+        // Add a dummy start node if we have an initial state
+        if (this.automaton.initialState) {
+            const initialId = `__start__${this.automaton.initialState}`;
+            this.nodes.add({
+                id: initialId,
+                label: '',
+                shape: 'dot',
+                size: 5,
+                color: '#333333',
+                physics: false
+            });
+            
+            // Add edge from dummy node to initial state
+            this.edges.add({
+                id: `initial_${this.automaton.initialState}`,
+                from: initialId,
+                to: this.automaton.initialState,
+                arrows: {
+                    to: { enabled: true, scaleFactor: 1 }
+                }
+            });
+        }
+        
+        // Add edges for transitions
+        const edges = [];
+        const transitionLabels = {};
+        
+        // For each state and its transitions
+        for (const fromState in this.automaton.transitions) {
+            // For each symbol and its destination state(s)
+            for (const symbol in this.automaton.transitions[fromState]) {
+                // For DFA, there is a single target state
+                if (this.automaton.type === 'DFA') {
+                    const toState = this.automaton.transitions[fromState][symbol];
+                    
+                    // Create a unique edge ID
+                    const edgeId = `${fromState}-${toState}`;
+                    
+                    // Add to transition labels or create a new one
+                    if (transitionLabels[edgeId]) {
+                        transitionLabels[edgeId].push(symbol);
+                    } else {
+                        transitionLabels[edgeId] = [symbol];
+                    }
+                } 
+                // For NFA, there can be multiple target states
+                else {
+                    for (const toState of this.automaton.transitions[fromState][symbol]) {
+                        const edgeId = `${fromState}-${toState}`;
+                        
+                        if (transitionLabels[edgeId]) {
+                            transitionLabels[edgeId].push(symbol);
+                        } else {
+                            transitionLabels[edgeId] = [symbol];
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Create edges based on collected transition labels
+        for (const edgeId in transitionLabels) {
+            const [fromState, toState] = edgeId.split('-');
+            
+            // Handle self-loops specially
+            const isSelfLoop = fromState === toState;
+            
+            edges.push({
+                id: edgeId,
+                from: fromState,
+                to: toState,
+                label: transitionLabels[edgeId].join(', '),
+                smooth: isSelfLoop ? 
+                    { type: 'curvedCW', roundness: 0.4 } : 
+                    { type: 'curvedCW', roundness: 0.2 },
+                physics: !isSelfLoop
+            });
+        }
+        
+        this.edges.add(edges);
+        
+        // Stabilize and fit the network
+        setTimeout(() => {
+            this.network.fit();
+            this.network.stabilize(50);
+        }, 100);
+    }
+
+    /**
+     * Highlight the current state(s) in a simulation
+     * @param {string|array} currentStates - Current state or states
+     * @param {boolean} accepted - Whether the input is accepted
+     */
+    highlightStates(currentStates, accepted = null) {
+        // Reset all nodes to default
+        this.nodes.forEach((node) => {
+            const isFinal = this.automaton && this.automaton.finalStates.has(node.id);
+            
+            this.nodes.update({
+                id: node.id,
+                color: {
+                    background: isFinal ? '#ffdddd' : '#d5e8ff',
+                    border: isFinal ? '#ff0000' : '#2B7CE9'
+                },
+                borderWidth: isFinal ? 3 : 2
+            });
+        });
+        
+        // Highlight current states
+        if (Array.isArray(currentStates)) {
+            for (const state of currentStates) {
+                if (state.startsWith('__start__')) continue;
+                
+                const isFinal = this.automaton && this.automaton.finalStates.has(state);
+                this.nodes.update({
+                    id: state,
+                    color: {
+                        background: accepted === null ? 
+                            '#ffff99' : // Yellow for in-progress
+                            (accepted ? '#aaffaa' : '#ffaaaa'), // Green for accept, red for reject
+                        border: isFinal ? '#ff0000' : '#2B7CE9',
+                    },
+                    borderWidth: 4
+                });
+            }
+        } else if (currentStates) {
+            if (currentStates.startsWith('__start__')) return;
+            
+            const isFinal = this.automaton && this.automaton.finalStates.has(currentStates);
+            this.nodes.update({
+                id: currentStates,
+                color: {
+                    background: accepted === null ? 
+                        '#ffff99' : // Yellow for in-progress
+                        (accepted ? '#aaffaa' : '#ffaaaa'), // Green for accept, red for reject
+                    border: isFinal ? '#ff0000' : '#2B7CE9',
+                },
+                borderWidth: 4
+            });
+        }
+    }
+
+    /**
+     * Highlight a transition in the visualization
+     * @param {string} fromState - Source state
+     * @param {string} toState - Target state
+     * @param {string} symbol - Transition symbol
+     */
+    highlightTransition(fromState, toState, symbol) {
+        const edgeId = `${fromState}-${toState}`;
+        
+        if (this.edges.get(edgeId)) {
+            this.edges.update({
+                id: edgeId,
+                color: { color: '#fd8d3c', highlight: '#fd8d3c' },
+                width: 3
+            });
+            
+            // Reset after a delay
+            setTimeout(() => {
+                this.edges.update({
+                    id: edgeId,
+                    color: { color: '#848484', highlight: '#848484' },
+                    width: 1
+                });
+            }, 1500);
+        }
+    }
+
+    /**
+     * Reset all highlighting in the visualization
+     */
+    resetHighlights() {
+        // Reset node colors
+        this.nodes.forEach((node) => {
+            const isFinal = this.automaton && this.automaton.finalStates.has(node.id);
+            
+            this.nodes.update({
+                id: node.id,
+                color: {
+                    background: isFinal ? '#ffdddd' : '#d5e8ff',
+                    border: isFinal ? '#ff0000' : '#2B7CE9'
+                },
+                borderWidth: isFinal ? 3 : 2
+            });
+        });
+        
+        // Reset edge colors
+        this.edges.forEach((edge) => {
+            this.edges.update({
+                id: edge.id,
+                color: undefined,
+                width: 1
+            });
+        });
+    }
+}
+
+    </script>
+    <script src="simulator.js">
+        /**
+ * Simulator class for automata with extended functionality
+ */
+class AutomatonSimulator {
+    constructor(visualizer) {
+        this.automaton = null;
+        this.visualizer = visualizer;
+        this.input = '';
+        this.step = 0;
+        this.simulationState = null;
+        this.isRunning = false;
+        this.animationSpeed = 500; // ms between steps
+    }
+
+    /**
+     * Set the automaton to simulate
+     * @param {Automaton} automaton 
+     */
+    setAutomaton(automaton) {
+        this.automaton = automaton;
+        this.reset();
+    }
+
+    /**
+     * Reset the simulation to the beginning
+     */
+    reset() {
+        this.step = 0;
+        this.simulationState = null;
+        this.isRunning = false;
+        this.updateVisualization();
+    }
+
+    /**
+     * Set the input string to simulate
+     * @param {string} input 
+     */
+    setInput(input) {
+        this.input = input;
+        this.reset();
+    }
+
+    /**
+     * Perform one step of the simulation
+     * @returns {object} Current simulation state
+     */
+    performStep() {
+        if (!this.automaton) return null;
+        
+        // Get the simulation state for the current step
+        this.simulationState = this.automaton.simulateStep(this.input, this.step);
+        
+        // Update the visualization
+        this.updateVisualization();
+        
+        // Increment step for next time
+        if (!this.simulationState.complete && !this.simulationState.error) {
+            this.step++;
+        }
+        
+        return this.simulationState;
+    }
+
+    /**
+     * Run the simulation to completion
+     */
+    runToCompletion() {
+        if (this.isRunning) return;
+        
+        this.isRunning = true;
+        this.reset(); // Reset to start from the beginning
+        
+        // Run the simulation step by step with animation
+        this._runNextStep();
+    }
+
+    /**
+     * Run the next step with animation
+     * @private
+     */
+    _runNextStep() {
+        if (!this.isRunning) return;
+        
+        const state = this.performStep();
+        
+        if (state.complete || state.error) {
+            this.isRunning = false;
+            return;
+        }
+        
+        // Schedule next step
+        setTimeout(() => this._runNextStep(), this.animationSpeed);
+    }
+
+    /**
+     * Update the visualization with the current state
+     */
+    updateVisualization() {
+        // Check if visualizer exists
+        if (!this.visualizer) {
+            return; // Skip visualization if no visualizer is available
+        }
+        
+        if (!this.simulationState) {
+            // Reset the visualization to default state
+            this.visualizer.resetHighlights();
+            return;
+        }
+        
+        const state = this.simulationState;
+        
+        // Highlight the current state(s)
+        if (this.automaton.type === 'DFA') {
+            this.visualizer.highlightStates(state.state, state.complete ? state.accepted : null);
+        } else {
+            this.visualizer.highlightStates(state.states, state.complete ? state.accepted : null);
+        }
+        
+        // If we just made a transition, highlight it
+        if (this.visualizer && this.step > 0 && !state.error) {
+            const symbol = this.input[this.step - 1];
+            const prevState = this.automaton.simulateStep(this.input, this.step - 1);
+            
+            if (this.automaton.type === 'DFA') {
+                this.visualizer.highlightTransition(prevState.state, state.state, symbol);
+            } else {
+                // For NFA, this is more complex - we'd need to highlight multiple transitions
+                // This is simplified for now
+                if (prevState.states && prevState.states.length > 0 && 
+                    state.states && state.states.length > 0) {
+                    this.visualizer.highlightTransition(prevState.states[0], state.states[0], symbol);
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the current simulation state for display
+     * @returns {object} Display-ready simulation state
+     */
+    getDisplayState() {
+        if (!this.simulationState) {
+            return {
+                currentState: '-',
+                remainingInput: this.input,
+                result: '-',
+                complete: false,
+                error: null
+            };
+        }
+        
+        const state = this.simulationState;
+        
+        return {
+            currentState: this.automaton.type === 'DFA' ? 
+                state.state : 
+                (state.states ? `{${state.states.join(', ')}}` : '-'),
+            remainingInput: state.remainingInput,
+            result: state.complete ? 
+                (state.accepted ? 'Accepted' : 'Rejected') : 
+                'In progress',
+            complete: state.complete,
+            error: state.error
+        };
+    }
+
+    /**
+     * Check if the automaton is deterministic or non-deterministic
+     * @returns {boolean} True if the automaton is deterministic, false otherwise
+     */
+    isDeterministic() {
+        if (!this.automaton) return false;
+        
+        // If no states or alphabet, consider it deterministic (empty automaton)
+        if (this.automaton.states.size === 0 || this.automaton.alphabet.size === 0) {
+            return true;
+        }
+        
+        // Check for epsilon transitions
+        for (const fromState in this.automaton.transitions) {
+            if (this.automaton.transitions[fromState] && 
+                this.automaton.transitions[fromState]['ε']) {
+                return false;
+            }
+        }
+        
+        // Check for multiple transitions on the same symbol or missing transitions
+        for (const state of this.automaton.states) {
+            const stateTransitions = this.automaton.transitions[state] || {};
+            
+            // For each symbol in the alphabet, there must be exactly one transition
+            for (const symbol of this.automaton.alphabet) {
+                // For new automata, missing transitions are ok initially
+                if (this.automaton.states.size <= 1) {
+                    continue;
+                }
+                
+                // If it's stored as NFA, check for transitions with multiple target states
+                if (this.automaton.type === 'NFA') {
+                    if (stateTransitions[symbol] && stateTransitions[symbol].size > 1) {
+                        return false; // Multiple transitions found
+                    }
+                }
+            }
+        }
+        
+        // If we got here, the automaton is deterministic or empty
+        return true;
+    }
+
+    /**
+     * Test if a string is accepted by the automaton
+     * @param {string} input - The input string to test
+     * @returns {object} Result object with accepted property
+     */
+    testString(input) {
+        if (!this.automaton) return { accepted: false, error: 'No automaton defined' };
+        return this.automaton.simulate(input);
+    }
+
+    /**
+     * Convert current NFA to equivalent DFA
+     * @returns {Automaton} The equivalent DFA
+     */
+    convertToDFA() {
+        if (!this.automaton) return null;
+        if (this.automaton.type === 'DFA') return this.automaton.clone();
+        
+        const dfa = this.automaton.convertToDFA();
+        return dfa;
+    }
+
+    /**
+     * Minimize the current DFA
+     * @returns {Automaton} The minimized DFA
+     */
+    minimizeDFA() {
+        if (!this.automaton) return null;
+        
+        // If it's an NFA, convert it to DFA first
+        let dfa = this.automaton;
+        if (this.automaton.type === 'NFA') {
+            dfa = this.automaton.convertToDFA();
+        }
+        
+        return dfa.minimize();
+    }
+}
+
+    </script>
+    <script src="ui.js">
+        /**
+ * UI controller for the Automata Simulator
+ */
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize visualizer for both editing and simulation
+    const visualizer = new AutomatonVisualizer('automataNetwork');
+    
+    // Initialize simulator with the same visualizer
+    const simulator = new AutomatonSimulator(visualizer);
+    
+    // Create a new automaton - start as an NFA and we'll determine later if it's a DFA
+    let automaton = new Automaton('NFA');
+    
+    // Update visualizer
+    visualizer.update(automaton);
+    
+    // UI elements
+    const automatonTypeDisplay = document.getElementById('automatonTypeDisplay');
+    const alphabetInput = document.getElementById('alphabet');
+    const newStateInput = document.getElementById('newState');
+    const addStateBtn = document.getElementById('addState');
+    const statesList = document.getElementById('statesList');
+    const initialStateSelect = document.getElementById('initialState');
+    const finalStatesContainer = document.getElementById('finalStates');
+    const fromStateSelect = document.getElementById('fromState');
+    const transitionSymbolInput = document.getElementById('transitionSymbol');
+    const toStateSelect = document.getElementById('toState');
+    const addTransitionBtn = document.getElementById('addTransition');
+    const transitionsList = document.getElementById('transitionsList');
+    const normalizeBtn = document.getElementById('normalize');
+    const clearBtn = document.getElementById('clear');
+    const saveFileBtn = document.getElementById('saveFile');
+    const loadFileBtn = document.getElementById('loadFile');
+    const fileInput = document.getElementById('fileInput');
+    
+    // Simulation UI elements
+    const inputStringInput = document.getElementById('inputString');
+    const stepBtn = document.getElementById('stepBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const currentStateSpan = document.getElementById('currentState');
+    const remainingInputSpan = document.getElementById('remainingInput');
+    const simulationResultSpan = document.getElementById('simulationResult');
+    
+    // Advanced operations UI elements
+    const checkDeterministicBtn = document.getElementById('checkDeterministic');
+    const testStringBtn = document.getElementById('testString');
+    const convertToDFABtn = document.getElementById('convertToDFA');
+    const minimizeDFABtn = document.getElementById('minimizeDFA');
+    const operationResultDiv = document.getElementById('operationResult');
+    
+    // Main panel
+    const mainPanel = document.getElementById('mainPanel');
+    
+    /**
+     * Update all UI elements based on the current automaton
+     */
+    function updateUI() {
+        // Update alphabet
+        alphabetInput.value = [...automaton.alphabet].join(',');
+        
+        // Update states lists
+        updateStatesList();
+        
+        // Update transitions
+        updateTransitionsList();
+        
+        // Update automaton type display
+        updateAutomatonTypeDisplay();
+        
+        // Update visualizer
+        visualizer.update(automaton);
+        
+        // Update simulator
+        simulator.setAutomaton(automaton.clone());
+        updateSimulationView();
+    }
+
+    /**
+     * Update the states list in the UI
+     */
+    function updateStatesList() {
+        // Clear lists
+        statesList.innerHTML = '';
+        initialStateSelect.innerHTML = '';
+        finalStatesContainer.innerHTML = '';
+        fromStateSelect.innerHTML = '';
+        toStateSelect.innerHTML = '';
+
+        // Populate state lists
+        for (const state of automaton.states) {
+            // Add to states list
+            const stateItem = document.createElement('div');
+            stateItem.className = 'state-item';
+            stateItem.innerHTML = `
+                <span>${state}</span>
+                <button class="remove-btn" data-state="${state}">×</button>
+            `;
+            statesList.appendChild(stateItem);
+            
+            // Add to initial state dropdown
+            const initialOption = document.createElement('option');
+            initialOption.value = state;
+            initialOption.textContent = state;
+            
+            if (automaton.initialState === state) {
+                initialOption.selected = true;
+            }
+            
+            initialStateSelect.appendChild(initialOption);
+            
+            // Add to final states
+            const finalCheckItem = document.createElement('div');
+            finalCheckItem.className = 'checkbox-item';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = `final_${state}`;
+            checkbox.value = state;
+            checkbox.checked = automaton.finalStates.has(state);
+            
+            const label = document.createElement('label');
+            label.htmlFor = `final_${state}`;
+            label.textContent = state;
+            
+            finalCheckItem.appendChild(checkbox);
+            finalCheckItem.appendChild(label);
+            finalStatesContainer.appendChild(finalCheckItem);
+            
+            // Add to from state dropdown
+            const fromOption = document.createElement('option');
+            fromOption.value = state;
+            fromOption.textContent = state;
+            fromStateSelect.appendChild(fromOption);
+            
+            // Add to to state dropdown
+            const toOption = document.createElement('option');
+            toOption.value = state;
+            toOption.textContent = state;
+            toStateSelect.appendChild(toOption);
+        }
+        
+        // Add event listeners for remove buttons
+        const removeButtons = document.querySelectorAll('.remove-btn[data-state]');
+        removeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const state = btn.getAttribute('data-state');
+                automaton.removeState(state);
+                updateUI();
+            });
+        });
+        
+        // Add event listeners for final state checkboxes
+        const finalCheckboxes = document.querySelectorAll('#finalStates input[type="checkbox"]');
+        finalCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                automaton.toggleFinalState(checkbox.value, checkbox.checked);
+                updateUI();
+            });
+        });
+    }
+
+    /**
+     * Update the transitions list in the UI
+     */
+    function updateTransitionsList() {
+        transitionsList.innerHTML = '';
+        
+        // Populate transitions list
+        for (const fromState in automaton.transitions) {
+            for (const symbol in automaton.transitions[fromState]) {
+                if (automaton.type === 'DFA') {
+                    const toState = automaton.transitions[fromState][symbol];
+                    
+                    const transitionItem = document.createElement('div');
+                    transitionItem.className = 'transition-item';
+                    transitionItem.innerHTML = `
+                        <span>${fromState} --${symbol}--> ${toState}</span>
+                        <button class="remove-btn" data-from="${fromState}" data-symbol="${symbol}" data-to="${toState}">×</button>
+                    `;
+                    transitionsList.appendChild(transitionItem);
+                } else {
+                    for (const toState of automaton.transitions[fromState][symbol]) {
+                        const transitionItem = document.createElement('div');
+                        transitionItem.className = 'transition-item';
+                        transitionItem.innerHTML = `
+                            <span>${fromState} --${symbol}--> ${toState}</span>
+                            <button class="remove-btn" data-from="${fromState}" data-symbol="${symbol}" data-to="${toState}">×</button>
+                        `;
+                        transitionsList.appendChild(transitionItem);
+                    }
+                }
+            }
+        }
+        
+        // Add event listeners for remove buttons
+        const removeButtons = document.querySelectorAll('.remove-btn[data-from]');
+        removeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const fromState = btn.getAttribute('data-from');
+                const symbol = btn.getAttribute('data-symbol');
+                const toState = btn.getAttribute('data-to');
+                
+                automaton.removeTransition(fromState, symbol, toState);
+                updateUI();
+            });
+        });
+    }
+
+    /**
+     * Update the simulation view with current state
+     */
+    function updateSimulationView() {
+        const state = simulator.getDisplayState();
+        
+        currentStateSpan.textContent = state.currentState;
+        remainingInputSpan.textContent = state.remainingInput || '-';
+        simulationResultSpan.textContent = state.error ? `Error: ${state.error}` : state.result;
+        
+        if (state.complete || state.error) {
+            simulationResultSpan.style.color = state.accepted ? 'green' : 'red';
+        } else {
+            simulationResultSpan.style.color = '';
+        }
+    }
+
+    /**
+     * Update the automaton type display based on the current automaton
+     */
+    function updateAutomatonTypeDisplay() {
+        // Check if automaton has any states
+        if (automaton.states.size === 0) {
+            automatonTypeDisplay.textContent = 'Type: Undetermined (create an automaton first)';
+            return;
+        }
+        
+        try {
+            // Create a temporary automaton object (don't modify the original)
+            const tempAutomaton = automaton.clone();
+            
+            // Create a simulator to check if the automaton is deterministic
+            const checkSimulator = new AutomatonSimulator(null); 
+            checkSimulator.setAutomaton(tempAutomaton);
+            
+            const isDeterministic = checkSimulator.isDeterministic();
+            const typeText = isDeterministic ? 'DFA (Deterministic)' : 'NFA (Non-deterministic)';
+            
+            automatonTypeDisplay.textContent = `Type: ${typeText}`;
+        } catch (error) {
+            console.error("Error checking automaton type:", error);
+            automatonTypeDisplay.textContent = 'Type: Error determining type';
+        }
+    }
+
+    // Event listener for alphabet input
+    alphabetInput.addEventListener('blur', () => {
+        const symbols = alphabetInput.value.split(',').map(s => s.trim()).filter(s => s);
+        automaton.setAlphabet(symbols);
+        updateUI();
+    });
+
+    // Event listener for adding states
+    addStateBtn.addEventListener('click', () => {
+        const stateName = newStateInput.value.trim();
+        if (stateName) {
+            if (automaton.states.has(stateName)) {
+                alert(`State "${stateName}" already exists.`);
+                return;
+            }
+            
+            automaton.addState(stateName);
+            newStateInput.value = '';
+            updateUI();
+        }
+    });
+
+    newStateInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addStateBtn.click();
+        }
+    });
+
+    // Event listener for setting initial state
+    initialStateSelect.addEventListener('change', () => {
+        automaton.setInitialState(initialStateSelect.value);
+        updateUI();
+    });
+
+    // Event listener for adding transitions
+    addTransitionBtn.addEventListener('click', () => {
+        const fromState = fromStateSelect.value;
+        const symbol = transitionSymbolInput.value.trim();
+        const toState = toStateSelect.value;
+        
+        if (!symbol) {
+            alert('Please enter a transition symbol.');
+            return;
+        }
+        
+        // Check if the transition already exists for DFA
+        if (automaton.type === 'DFA' && 
+            automaton.transitions[fromState] && 
+            automaton.transitions[fromState][symbol]) {
+            alert(`A transition from ${fromState} on symbol ${symbol} already exists in the DFA.`);
+            return;
+        }
+        
+        automaton.addTransition(fromState, symbol, toState);
+        transitionSymbolInput.value = '';
+        updateUI();
+    });
+
+    transitionSymbolInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            addTransitionBtn.click();
+        }
+    });
+
+    // Event listener for normalize button
+    normalizeBtn.addEventListener('click', () => {
+        if (confirm('Normalize the automaton? This will rename all states.')) {
+            automaton = automaton.normalize();
+            updateUI();
+        }
+    });
+
+    // Event listener for clear button
+    clearBtn.addEventListener('click', () => {
+        if (confirm('Clear the entire automaton? This cannot be undone.')) {
+            // Create a new automaton as NFA since we determine type automatically
+            automaton = new Automaton('NFA');
+            updateUI();
+        }
+    });
+
+    // Event listener for save button
+    saveFileBtn.addEventListener('click', () => {
+        const json = automaton.toJSON();
+        const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const downloadLink = document.getElementById('downloadLink');
+        downloadLink.href = url;
+        downloadLink.download = 'automaton.json';
+        downloadLink.click();
+        
+        setTimeout(() => URL.revokeObjectURL(url), 100);
+    });
+
+    // Event listener for load button
+    loadFileBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const json = JSON.parse(e.target.result);
+                automaton = Automaton.fromJSON(json);
+                
+                // The type will be determined automatically when updateUI is called
+                updateUI();
+            } catch (error) {
+                alert(`Error loading file: ${error.message}`);
+            }
+            
+            // Reset the file input
+            fileInput.value = '';
+        };
+        
+        reader.readAsText(file);
+    });
+
+    // Simulation events
+    inputStringInput.addEventListener('input', () => {
+        simulator.setInput(inputStringInput.value);
+        updateSimulationView();
+    });
+
+    stepBtn.addEventListener('click', () => {
+        simulator.performStep();
+        updateSimulationView();
+    });
+
+    resetBtn.addEventListener('click', () => {
+        simulator.reset();
+        updateSimulationView();
+    });
+
+    // Advanced operations event handlers
+    
+    // Check if automaton is deterministic
+    checkDeterministicBtn.addEventListener('click', () => {
+        try {
+            if (!simulator.automaton) {
+                operationResultDiv.textContent = 'No automaton loaded.';
+                return;
+            }
+            
+            const isDeterministic = simulator.isDeterministic();
+            operationResultDiv.textContent = isDeterministic ? 
+                'The automaton is deterministic (DFA).' : 
+                'The automaton is non-deterministic (NFA).';
+            
+            // Also update the display in the edit panel
+            updateAutomatonTypeDisplay();
+        } catch (error) {
+            console.error("Error checking if deterministic:", error);
+            operationResultDiv.textContent = 'Error checking automaton type.';
+        }
+    });
+    
+    // Test string acceptance
+    testStringBtn.addEventListener('click', () => {
+        const input = prompt('Enter string to test:', '');
+        if (input === null) return; // User canceled
+        
+        const result = simulator.testString(input);
+        
+        if (result.error) {
+            operationResultDiv.textContent = `Error: ${result.error}`;
+        } else {
+            operationResultDiv.textContent = result.accepted ? 
+                `The string "${input}" is accepted.` : 
+                `The string "${input}" is rejected.`;
+        }
+    });
+    
+    // Convert NFA to DFA
+    convertToDFABtn.addEventListener('click', () => {
+        if (simulator.automaton.type === 'DFA') {
+            operationResultDiv.textContent = 'The automaton is already a DFA.';
+            return;
+        }
+        
+        const dfa = simulator.convertToDFA();
+        if (dfa) {
+            // Ask if user wants to replace current automaton
+            if (confirm('DFA created successfully. Replace current automaton with the DFA?')) {
+                automaton = dfa;
+                updateUI();
+                
+                // Update simulator with the new DFA
+                simulator.setAutomaton(automaton.clone());
+                simulator.reset();
+                updateSimulationView();
+                
+                operationResultDiv.textContent = 'NFA converted to DFA and loaded.';
+            } else {
+                operationResultDiv.textContent = 'DFA created but not loaded.';
+            }
+        } else {
+            operationResultDiv.textContent = 'Failed to convert NFA to DFA.';
+        }
+    });
+    
+    // Minimize DFA
+    minimizeDFABtn.addEventListener('click', () => {
+        if (simulator.automaton.type !== 'DFA') {
+            if (confirm('This is not a DFA. Convert to DFA first?')) {
+                // Convert to DFA first
+                const dfa = simulator.convertToDFA();
+                if (!dfa) {
+                    operationResultDiv.textContent = 'Failed to convert to DFA.';
+                    return;
+                }
+                simulator.setAutomaton(dfa);
+            } else {
+                return;
+            }
+        }
+        
+        const minimizedDFA = simulator.minimizeDFA();
+        if (minimizedDFA) {
+            // Ask if user wants to replace current automaton
+            if (confirm('DFA minimized successfully. Replace current automaton with the minimized DFA?')) {
+                automaton = minimizedDFA;
+                updateUI();
+                
+                // Update simulator with the new DFA
+                simulator.setAutomaton(automaton.clone());
+                simulator.reset();
+                updateSimulationView();
+                
+                operationResultDiv.textContent = 'DFA minimized and loaded.';
+            } else {
+                operationResultDiv.textContent = 'Minimized DFA created but not loaded.';
+            }
+        } else {
+            operationResultDiv.textContent = 'Failed to minimize DFA.';
+        }
+    });
+    
+    // Initialize simulator when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set up the simulator with the initial automaton
+        simulator.setAutomaton(automaton.clone());
+    });
+    
+    // Initialize with a sample automaton
+    function createSampleAutomaton() {
+        const sample = new Automaton('DFA');
+        
+        // Add states
+        sample.addState('q0');
+        sample.addState('q1');
+        sample.addState('q2');
+        
+        // Set initial and final states
+        sample.setInitialState('q0');
+        sample.toggleFinalState('q2', true);
+        
+        // Set alphabet
+        sample.setAlphabet(['a', 'b']);
+        
+        // Add transitions
+        sample.addTransition('q0', 'a', 'q1');
+        sample.addTransition('q0', 'b', 'q0');
+        sample.addTransition('q1', 'a', 'q1');
+        sample.addTransition('q1', 'b', 'q2');
+        
+        return sample;
+    }
+    
+    // Create a sample automaton
+    automaton = createSampleAutomaton();
+    updateUI();
+});
+
+    </script>
 </body>
 </html>
